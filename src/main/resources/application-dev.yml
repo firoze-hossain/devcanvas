@@ -1,0 +1,17 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/portfolio_dev
+    username: ${DB_DEV_USERNAME:dev_user}
+    password: ${DB_DEV_PASSWORD:}
+
+logging:
+  level:
+    root: INFO
+    org:
+      hibernate: DEBUG
+      springframework:
+        security: DEBUG
+        web: DEBUG
