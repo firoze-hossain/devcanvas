@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/portfolio_db
-    username: ${DB_USERNAME:postgres}  # Default to 'postgres' if env var not set
-    password: ${DB_PASSWORD:}          # Empty default forces env var requirement
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,7 +19,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: ${JWT_SECRET:your-256-bit-secret-key-must-be-at-least-32-characters-long}
+      secret-key: ${JWT_SECRET}
       expiration: 86400000    # 24 hours
       refresh-token:
         expiration: 604800000 # 7 days
