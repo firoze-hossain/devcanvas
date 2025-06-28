@@ -1,3 +1,5 @@
+server:
+  port: 8228
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/portfolio_db
