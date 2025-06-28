@@ -1,5 +1,7 @@
 server:
   port: 8228
+  servlet:
+    context-path: /api/v1/devcanvas
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/portfolio_db
