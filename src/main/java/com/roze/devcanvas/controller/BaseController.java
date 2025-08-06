@@ -23,16 +23,18 @@ public class BaseController {
     private EducationService educationService;
     private MessageService messageService;
     private ProjectService projectService;
+    private DevToolService devToolService;
 
     @Autowired
     public BaseController(ExperienceService experienceService, SkillService skillService,
                           EducationService educationService, MessageService messageService,
-                          ProjectService projectService) {
+                          ProjectService projectService, DevToolService devToolService) {
         this.experienceService = experienceService;
         this.skillService = skillService;
         this.educationService = educationService;
         this.messageService = messageService;
         this.projectService = projectService;
+        this.devToolService = devToolService;
     }
 
     private void getEducationAttributes(Model theModel) {
@@ -80,6 +82,11 @@ public class BaseController {
         theModel.addAttribute("newMessage", newMessage);
     }
 
+    private void getDevToolAttributes(Model theModel) {
+        List<DevTool> devTools = devToolService.getAllDevTools();
+        theModel.addAttribute("devTools", devTools);
+    }
+
     @GetMapping({"", "/", "/portfolio"})
     public String homeView(Model theModel, @RequestParam(value = "rateLimitError", required = false) String rateLimitError) {
         getEducationAttributes(theModel);
@@ -87,6 +94,7 @@ public class BaseController {
         getSkillAttributes(theModel);
         getProjectAttributes(theModel);
         getMessageAttributes(theModel);
+        getDevToolAttributes(theModel);
 
         if (rateLimitError != null) {
             log.info("Rate limit error: {}", rateLimitError);
