@@ -1,68 +1,86 @@
 package com.roze.devcanvas.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true, nullable = false)
-    private String username;
-    @Column(unique = true, nullable = false)
-    private String email;
-    @Column(nullable = false)
-    private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(name = "id")
+    private Integer id;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+    @Column(name = "username")
+    private String userName;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<com.roze.devcanvas.entity.Role> roles;
+
+    //Constructors
+    public User() {
     }
 
-    @Override
+    public User(String userName, String password, boolean enabled) {
+        this.userName = userName;
+        this.password = password;
+        this.enabled = enabled;
+    }
+
+    public User(String userName, String password, boolean enabled, Collection<com.roze.devcanvas.entity.Role> roles) {
+        this.userName = userName;
+        this.password = password;
+        this.enabled = enabled;
+        this.roles = roles;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getPassword() {
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return username;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public boolean getEnabled() {
+        return enabled;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
+    public Collection<com.roze.devcanvas.entity.Role> getRoles() {
+        return roles;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public void setRoles(Collection<com.roze.devcanvas.entity.Role> roles) {
+        this.roles = roles;
     }
 }
