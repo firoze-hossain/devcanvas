@@ -1201,55 +1201,181 @@ body.light .signatures {
     list-style-type: none;
 }
 
-/* Dev Tools Section */
-.dev-tool-boxes {
-    display: flex;
-    flex-flow: row wrap;
-    gap: 3.5%;
-    margin-block-start: var(--gutter-x-large);
+/* Dev Tools Section - Modern Professional Style */
+.dev-tools {
+    padding-block-start: var(--gutter-huge);
 }
 
-.dev-tool-box {
-    flex-basis: 100%;
+.dev-tool-platform-selector {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-block-end: var(--gutter-medium);
-    border: 1px solid var(--border);
-    padding: var(--gutter-medium);
+    gap: var(--gutter-nano);
+    margin-block: var(--gutter-medium);
+    overflow-x: auto;
+    padding-block-end: var(--gutter-nano);
+}
+
+.platform-tab {
+    padding: var(--gutter-nano) var(--gutter-micro);
     border-radius: var(--gutter-nano);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--body);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.platform-tab.active,
+.platform-tab:hover {
+    background: var(--important);
+    color: var(--bg-color-primary);
+    border-color: var(--important);
+}
+
+.dev-tool-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--gutter-medium);
+    margin-block-start: var(--gutter-medium);
+}
+
+.dev-tool-card {
+    border: 1px solid var(--border);
+    border-radius: var(--gutter-nano);
+    padding: var(--gutter-medium);
     background-color: var(--bg-color-secondary);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.dev-tool-textbox {
-    flex-grow: 1;
+.dev-tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-.dev-tool-downloads {
+.dev-tool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: var(--gutter-micro);
+}
+
+.dev-tool-meta {
+    display: flex;
+    gap: var(--gutter-micro);
+    font-size: var(--text-small);
+    color: var(--sub);
+}
+
+.dev-tool-content {
+    display: flex;
+    gap: var(--gutter-medium);
+    margin-block-end: var(--gutter-medium);
+}
+
+.dev-tool-description {
+    flex: 1;
+    font-size: var(--text-small);
+    color: var(--body);
+}
+
+.dev-tool-screenshot {
+    flex: 0 0 150px;
+    border-radius: var(--gutter-nano);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.dev-tool-screenshot img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.download-options {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--gutter-micro);
-    margin-block-start: var(--gutter-small);
+    gap: var(--gutter-nano);
+    margin-block-end: var(--gutter-micro);
 }
 
-.dev-tool-illustration img {
-    max-height: 300px;
-    width: auto;
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gutter-nano);
+    padding: var(--gutter-nano) var(--gutter-micro);
     border-radius: var(--gutter-nano);
-    margin-left: var(--gutter-medium);
+    font-size: var(--text-small);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
 }
 
-@media (max-width: 845px) {
-    .dev-tool-box {
+.download-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.download-btn.windows {
+    background-color: #0078d7;
+    color: white;
+}
+
+.download-btn.mac {
+    background-color: #000000;
+    color: white;
+}
+
+.download-btn.linux {
+    background-color: #333333;
+    color: white;
+}
+
+.download-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.release-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gutter-medium);
+    font-size: var(--text-small);
+    color: var(--sub);
+    padding-block-start: var(--gutter-micro);
+    border-top: 1px solid var(--border);
+}
+
+/* Platform filtering */
+.dev-tool-card.hidden {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dev-tool-content {
         flex-direction: column;
     }
 
-    .dev-tool-illustration img {
-        margin-left: 0;
-        margin-top: var(--gutter-medium);
+    .dev-tool-screenshot {
+        flex: 1 1 100%;
+        max-height: 200px;
     }
 }
 
+@media (max-width: 480px) {
+    .dev-tool-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dev-tool-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--gutter-nano);
+    }
+}
 @media (max-width: 1040px) {
     .footer-links {
         gap: var(--gutter-micro);

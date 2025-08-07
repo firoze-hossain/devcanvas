@@ -22,7 +22,13 @@ public class DevTool {
     
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    
+
+    @Column(name = "version")
+    private String version;
+
+    @Column(name = "file_size")
+    private String fileSize;
+
     @Column(name = "windows_download_url")
     private String windowsDownloadUrl;
     

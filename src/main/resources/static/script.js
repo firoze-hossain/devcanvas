@@ -112,3 +112,33 @@ logosWrappers.forEach(async (logoWrapper, i) => {
 });
 
 yearEl.textContent = new Date().getFullYear();
+
+// Platform filtering functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const platformTabs = document.querySelectorAll('.platform-tab');
+
+  platformTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      // Update active tab
+      platformTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+
+      // Filter tools
+      const platform = this.dataset.platform;
+      const tools = document.querySelectorAll('.dev-tool-card');
+
+      tools.forEach(tool => {
+        if (platform === 'all') {
+          tool.classList.remove('hidden');
+        } else {
+          const platforms = tool.dataset.platforms.split(' ');
+          if (platforms.includes(platform)) {
+            tool.classList.remove('hidden');
+          } else {
+            tool.classList.add('hidden');
+          }
+        }
+      });
+    });
+  });
+});

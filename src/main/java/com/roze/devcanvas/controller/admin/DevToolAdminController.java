@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Controller
@@ -55,21 +56,25 @@ public class DevToolAdminController {
         if (windowsFile != null && !windowsFile.isEmpty()) {
             String windowsPath = saveFile(windowsFile, "windows");
             devTool.setWindowsDownloadUrl("/admin/dev-tools/download/" + windowsPath);
+            devTool.setFileSize(formatFileSize(windowsFile.getSize()));
         }
 
         if (macFile != null && !macFile.isEmpty()) {
             String macPath = saveFile(macFile, "mac");
             devTool.setMacDownloadUrl("/admin/dev-tools/download/" + macPath);
+            devTool.setFileSize(formatFileSize(macFile.getSize()));
         }
 
         if (linuxDebFile != null && !linuxDebFile.isEmpty()) {
             String linuxDebPath = saveFile(linuxDebFile, "linux-deb");
             devTool.setLinuxDebDownloadUrl("/admin/dev-tools/download/" + linuxDebPath);
+            devTool.setFileSize(formatFileSize(linuxDebFile.getSize()));
         }
 
         if (linuxRpmFile != null && !linuxRpmFile.isEmpty()) {
             String linuxRpmPath = saveFile(linuxRpmFile, "linux-rpm");
             devTool.setLinuxRpmDownloadUrl("/admin/dev-tools/download/" + linuxRpmPath);
+            devTool.setFileSize(formatFileSize(linuxRpmFile.getSize()));
         }
 
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -80,12 +85,14 @@ public class DevToolAdminController {
         devToolService.save(devTool);
         return "redirect:/admin/dev-tools";
     }
+
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("devToolId") int id, Model theModel) {
         DevTool devTool = devToolService.findById(id);
         theModel.addAttribute("devTool", devTool);
         return "admin/dev-tools/dev-tool-form";
     }
+
     @GetMapping("/delete")
     public String deleteDevTool(@RequestParam("devToolId") int id) {
         devToolService.deleteById(id);
@@ -114,5 +121,12 @@ public class DevToolAdminController {
         Files.createDirectories(path.getParent());
         Files.write(path, file.getBytes());
         return fileName;
+    }
+
+    private String formatFileSize(long size) {
+        if (size <= 0) return "0 B";
+        final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 }

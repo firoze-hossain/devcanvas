@@ -292,32 +292,72 @@
     <section class="dev-tools">
         <div class="container">
             <h2 class="h2" id="dev-tools">Developer Tools</h2>
-            <div class="dev-tool-boxes">
-                <article class="dev-tool-box" th:each="tool : ${devTools}">
-                    <div class="dev-tool-textbox">
-                        <div>
-                            <h3 class="h4" th:text="${tool.name}">Tool Name</h3>
-                            <p class="dev-tool-text" th:text="${tool.description}">Tool Description</p>
-                        </div>
-                        <div class="dev-tool-downloads">
-                            <a th:if="${tool.windowsDownloadUrl != null}"
-                               th:href="${tool.windowsDownloadUrl}"
-                               class="btn btn-secondary">Windows (.exe)</a>
-                            <a th:if="${tool.macDownloadUrl != null}"
-                               th:href="${tool.macDownloadUrl}"
-                               class="btn btn-secondary">Mac (.dmg)</a>
-                            <a th:if="${tool.linuxDebDownloadUrl != null}"
-                               th:href="${tool.linuxDebDownloadUrl}"
-                               class="btn btn-secondary">Linux (Debian)</a>
-                            <a th:if="${tool.linuxRpmDownloadUrl != null}"
-                               th:href="${tool.linuxRpmDownloadUrl}"
-                               class="btn btn-secondary">Linux (RPM)</a>
+
+            <div class="dev-tool-platform-selector">
+                <button class="platform-tab active" data-platform="all">All Platforms</button>
+                <button class="platform-tab" data-platform="windows">Windows</button>
+                <button class="platform-tab" data-platform="mac">Mac</button>
+                <button class="platform-tab" data-platform="linux">Linux</button>
+            </div>
+
+            <div class="dev-tool-cards">
+                <article class="dev-tool-card" th:each="tool : ${devTools}"
+                         th:attr="data-platforms=${tool.windowsDownloadUrl != null ? 'windows' : ''}
+                + ${tool.macDownloadUrl != null ? ' mac' : ''}
+                + ${tool.linuxDebDownloadUrl != null || tool.linuxRpmDownloadUrl != null ? ' linux' : ''}">
+                    <div class="dev-tool-header">
+                        <h3 class="h4" th:text="${tool.name}">Tool Name</h3>
+                        <div class="dev-tool-meta">
+                            <span class="version" th:text="${tool.version}">v1.0.0</span>
+                            <span class="file-size" th:text="${tool.fileSize}">147.0 MB</span>
                         </div>
                     </div>
-                    <picture class="dev-tool-illustration" th:if="${tool.imagePath != null}">
-                        <img th:src="@{'assets/images/dev-tools/' + ${tool.imagePath}}"
-                             alt="Dev Tool Screenshot" loading="lazy"/>
-                    </picture>
+
+                    <div class="dev-tool-content">
+                        <div class="dev-tool-description" th:text="${tool.description}">
+                            Tool description goes here...
+                        </div>
+
+                        <div class="dev-tool-screenshot" th:if="${tool.imagePath != null}">
+                            <img th:src="@{'assets/images/dev-tools/' + ${tool.imagePath}}"
+                                 alt="Dev Tool Screenshot" loading="lazy"/>
+                        </div>
+                    </div>
+
+                    <div class="dev-tool-downloads">
+                        <div class="download-options">
+                            <a th:if="${tool.windowsDownloadUrl != null}"
+                               th:href="${tool.windowsDownloadUrl}"
+                               class="download-btn windows" data-platform="windows">
+                                <svg><!-- Windows icon SVG --></svg>
+                                Windows (.exe)
+                            </a>
+                            <a th:if="${tool.macDownloadUrl != null}"
+                               th:href="${tool.macDownloadUrl}"
+                               class="download-btn mac" data-platform="mac">
+                                <svg><!-- Mac icon SVG --></svg>
+                                Mac (.dmg)
+                            </a>
+                            <a th:if="${tool.linuxDebDownloadUrl != null}"
+                               th:href="${tool.linuxDebDownloadUrl}"
+                               class="download-btn linux deb" data-platform="linux">
+                                <svg><!-- Linux icon SVG --></svg>
+                                Linux (Debian)
+                            </a>
+                            <a th:if="${tool.linuxRpmDownloadUrl != null}"
+                               th:href="${tool.linuxRpmDownloadUrl}"
+                               class="download-btn linux rpm" data-platform="linux">
+                                <svg><!-- Linux icon SVG --></svg>
+                                Linux (RPM)
+                            </a>
+                        </div>
+
+                        <div class="release-info" th:if="${tool.version != null}">
+                            <span>Version: <strong th:text="${tool.version}"></strong></span>
+                            <span>File size: <strong th:text="${tool.fileSize}"></strong></span>
+                            <span>License: <strong>Free to use</strong></span>
+                        </div>
+                    </div>
                 </article>
             </div>
         </div>
