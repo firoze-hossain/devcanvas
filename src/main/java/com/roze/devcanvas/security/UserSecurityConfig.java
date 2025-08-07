@@ -32,7 +32,7 @@ public class UserSecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userService){
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userService) {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
         auth.setUserDetailsService(userService);
         auth.setPasswordEncoder(passwordEncoder());
@@ -40,34 +40,35 @@ public class UserSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, ApiRateLimitFilter apiRateLimitFilter) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http, ApiRateLimitFilter apiRateLimitFilter) throws Exception {
         http
-            .addFilterBefore(apiRateLimitFilter, UsernamePasswordAuthenticationFilter.class) // Add rate-limiting filter
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.GET, "/admin", "/admin/").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-            )
-            .httpBasic(Customizer.withDefaults())
-            .csrf(AbstractHttpConfigurer::disable);
+                .addFilterBefore(apiRateLimitFilter, UsernamePasswordAuthenticationFilter.class) // Add rate-limiting filter
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/admin/dev-tools/download/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/admin", "/admin/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable);
 
         http.formLogin(form ->
                 form
-                    .loginPage("/login")
-                    .loginProcessingUrl("/authenticateUser")
-                    .successHandler(new AuthenticationHandler())
-                    .failureHandler(new AuthenticationHandler())
-                    .permitAll()
+                        .loginPage("/login")
+                        .loginProcessingUrl("/authenticateUser")
+                        .successHandler(new AuthenticationHandler())
+                        .failureHandler(new AuthenticationHandler())
+                        .permitAll()
         );
 
         http.logout(logout ->
-            logout
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout"))
-                    .logoutSuccessUrl("/login")
-                    .permitAll()
+                logout
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout"))
+                        .logoutSuccessUrl("/login")
+                        .permitAll()
         );
 
         http.exceptionHandling(customizer ->
