@@ -24,6 +24,7 @@ import java.util.List;
 @RequestMapping("/admin/dev-tools")
 public class DevToolAdminController {
     private final DevToolService devToolService;
+    private static final String UPLOAD_DIR = "uploads/dev-tools/";
 
     @Autowired
     public DevToolAdminController(DevToolService devToolService) {
@@ -94,7 +95,9 @@ public class DevToolAdminController {
     }
 
     @GetMapping("/delete")
-    public String deleteDevTool(@RequestParam("devToolId") int id) {
+    public String deleteDevTool(@RequestParam("devToolId") int id) throws IOException {
+        DevTool devTool = devToolService.findById(id);
+        deleteAssociatedFiles(devTool);
         devToolService.deleteById(id);
         return "redirect:/admin/dev-tools";
     }
@@ -128,5 +131,24 @@ public class DevToolAdminController {
         final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
         return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    private void deleteAssociatedFiles(DevTool devTool) throws IOException {
+        deleteFileIfExists(devTool.getWindowsDownloadUrl());
+        deleteFileIfExists(devTool.getMacDownloadUrl());
+        deleteFileIfExists(devTool.getLinuxDebDownloadUrl());
+        deleteFileIfExists(devTool.getLinuxRpmDownloadUrl());
+        deleteFileIfExists(devTool.getImagePath());
+    }
+
+    private void deleteFileIfExists(String fileUrl) throws IOException {
+        if (fileUrl != null && !fileUrl.isEmpty()) {
+            // Extract filename from URL if needed
+            String filename = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+            Path path = Paths.get(UPLOAD_DIR + filename);
+            if (Files.exists(path)) {
+                Files.delete(path);
+            }
+        }
     }
 }
